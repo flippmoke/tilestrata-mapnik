@@ -20,7 +20,12 @@ describe('Provider Implementation "mapnik"', function() {
 					assert.instanceOf(buffer, Buffer);
 
 					var im_actual = buffer.toString('base64');
-					var im_expected = fs.readFileSync(__dirname + '/fixtures/world.png').toString('base64');
+                    var expected = __dirname + '/fixtures/world.png';
+                    if (!fs.existsSync(expected) || process.env.UPDATE)
+                    {
+                        fs.writeFileSync(expected, buffer);
+                    }
+					var im_expected = fs.readFileSync(expected).toString('base64');
 					assert.equal(im_actual, im_expected);
 
 					done();
@@ -39,8 +44,13 @@ describe('Provider Implementation "mapnik"', function() {
 					assert.deepEqual(headers, {'Content-Type': 'application/json'});
 					assert.instanceOf(buffer, Buffer);
 
+                    var expected = __dirname + '/fixtures/world.json';
+                    if (!fs.existsSync(expected) || process.env.UPDATE)
+                    {
+                        fs.writeFileSync(expected, buffer);
+                    }
 					var data_actual = buffer.toString('base64');
-					var data_expected = fs.readFileSync(__dirname + '/fixtures/world.json').toString('base64');
+					var data_expected = fs.readFileSync(expected).toString('base64');
 					assert.equal(data_actual, data_expected);
 
 					done();
